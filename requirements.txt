@@ -7,4 +7,5 @@ django-environ
 drf-yasg
 Pillow
 psycopg2
+djangorestframework-simplejwt
 # django-redis

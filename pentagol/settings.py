@@ -23,14 +23,16 @@ LOCAL_APPS = [
     'championship',
     'clubs',
     'matches',
-    # 'news',
+    'news',
     'extra',
 ]
 
 THIRD_APPS = [
     "corsheaders",
+    "drf_yasg",
     'django_filters',
     'rest_framework',
+    'rest_framework_simplejwt',
 ]
 
 INSTALLED_APPS = [
@@ -43,16 +45,16 @@ INSTALLED_APPS = [
  ] + THIRD_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+APPEND_SLASH = False
 ROOT_URLCONF = 'pentagol.urls'
 
 TEMPLATES = [
@@ -138,36 +140,21 @@ MEDIA_ROOT = BASE_DIR / env('MEDIA_PATH', default='../media/')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = [
+
+CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
-    "http://192.168.90.103",
-    "http://192.168.90.103:8080",
+    "http://192.168.31.85",
+    "http://192.168.31.85:8080",
 ]
 
-CORS_ALLOW_HEADERS = default_headers + (
-    'cache-control',
-    'lang',
-    'device',
-)
-
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:8080",
-#     "http://192.168.90.103",
-#     "http://192.168.90.103:8080",
-# ]
-
-# ALLOWED_HOSTS = ['192.168.80.165', '127.0.0.1', '*']
-
-# CORS_ALLOW_METHODS = [
-#     "DELETE",
-#     "GET",
-#     "OPTIONS",
-#     "PATCH",
-#     "POST",
-#     "PUT",
-# ]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -182,10 +169,12 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
         # 'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend',
@@ -198,6 +187,35 @@ REST_FRAMEWORK = {
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
 }
 
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
 # Swagger settings
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -208,8 +226,7 @@ SWAGGER_SETTINGS = {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header',
-            'description': 'Type in the *\'Value\'* input box below: **\'Bearer &lt;JWT&gt;\'**, where JWT is the '
-                           'JSON web token you get back when logging in. '
+            # 'description': '12345 '
         }
     },
     'DOC_EXPANSION': 'none',  # “none”, “list”, or “full”

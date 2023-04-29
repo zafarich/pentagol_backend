@@ -12,7 +12,18 @@ class MatchSerializers(serializers.ModelSerializer):
             'home_club',
             'date',
             'time',
-            'tur',
+            'tour',
+            'away_gols',
+            'home_gols',
+            'match_score',
+            'is_started',
         ]
 
-        read_only_fields = ['id', 'tur', 'away_club', 'home_club']
+        read_only_fields = [
+            'id',
+            'tour',
+            'away_club',
+            'home_club',
+            'match_score',
+            'is_started'
+        ]
