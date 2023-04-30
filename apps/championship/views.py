@@ -114,7 +114,19 @@ class ChampionshipModelViewSet(ModelViewSet):
 
             return Response(status=200, data=result)
         else:
-            return Response(status=200, data={'Season has not started'})
+            result = []
+            clubs = Club.objects.filter(championship_id=pk)
+            for club in clubs:
+                result.append({
+                    'id': club.id,
+                    'title': club.title,
+                    'game_count': 0,
+                    'score': 0,
+                    't_n': 0,
+                    'image': CURRENT_HOST + club.image.url
+                })
+
+            return Response(status=200, data=result)
 
 
 class SeasonModelViewSet(ModelViewSet):
