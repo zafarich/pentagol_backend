@@ -17,7 +17,7 @@ SECRET_KEY = env('SECRET_KEY')
 DEBUG = env('DEBUG').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']
-CURRENT_HOST = env('CURRENT_PROTOCOL') + ':/' + env('CURRENT_HOST') + ':' + env('CURRENT_PORT')
+CURRENT_HOST = env('CURRENT_PROTOCOL') + '://' + env('CURRENT_HOST') + ':' + env('CURRENT_PORT')
 
 LOCAL_APPS = [
     'championship',
