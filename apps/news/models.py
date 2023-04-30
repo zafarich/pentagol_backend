@@ -5,6 +5,9 @@ from django.utils.text import slugify
 class CategoryNews(models.Model):
     title = models.JSONField()
 
+    class Meta:
+        ordering = ['-id']
+
 
 class News(models.Model):
     title = models.JSONField()
@@ -18,3 +21,6 @@ class News(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.title['en'])
         super(News, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['-created_at']

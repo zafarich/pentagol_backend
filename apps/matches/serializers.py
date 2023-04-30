@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from championship.serializers import SeasonGetSerializers
-from clubs.serializers import ClubWithLastMatchesSerializers
+from clubs.serializers import ClubPartialSerializers
 from matches.models import Match
 
 
@@ -32,8 +32,8 @@ class MatchSerializers(serializers.ModelSerializer):
 
 
 class MatchGETSerializers(serializers.ModelSerializer):
-    away_club = ClubWithLastMatchesSerializers()
-    home_club = ClubWithLastMatchesSerializers()
+    away_club = ClubPartialSerializers()
+    home_club = ClubPartialSerializers()
     season = SeasonGetSerializers()
 
     class Meta:

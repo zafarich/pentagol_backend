@@ -4,6 +4,7 @@ from rest_framework import serializers
 from championship.serializers import ChampionshipPartialSerializers
 from clubs.models import Club
 from matches.models import Match
+from pentagol.settings import CURRENT_HOST
 
 
 class ClubSerializers(serializers.ModelSerializer):
@@ -37,6 +38,8 @@ class ClubGetSerializers(serializers.ModelSerializer):
 
 
 class ClubPartialSerializers(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
+
     class Meta:
         model = Club
         fields = [
@@ -45,34 +48,5 @@ class ClubPartialSerializers(serializers.ModelSerializer):
             'image',
         ]
 
-
-class ClubWithLastMatchesSerializers(serializers.ModelSerializer):
-    last_five_matches = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Club
-        fields = [
-            'id',
-            'title',
-            'image',
-            'last_five_matches',
-        ]
-
-    def get_last_five_matches(self, obj):
-        matches = Match.objects.filter((Q(away_club_id=obj.id) | Q(home_club_id=obj.id)
-                                        & Q(is_started=True))) \
-            .order_by('-tour', '-date').values('away_club_id', 'home_club_id', 'home_goals', 'away_goals')
-        result = []
-        for match in matches:
-            if match['away_goals'] == match['home_goals']:
-                result.append(0)
-            if match['away_club_id'] == obj.id:
-                result.append(
-                    match['away_goals'] > match['home_goals']
-                )
-            if match['home_club_id'] == obj.id:
-                result.append(
-                    match['home_goals'] > match['away_goals']
-                )
-
-        return result
+    def get_image(self, obj):
+        return CURRENT_HOST + obj.image.url

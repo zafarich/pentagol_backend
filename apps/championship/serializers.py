@@ -14,7 +14,6 @@ class ChampionshipSerializers(serializers.ModelSerializer):
             'image',
             'sort',
             'championship_status',
-            'actual_season',
         ]
 
         read_only_fields = ['id', 'championship_status']

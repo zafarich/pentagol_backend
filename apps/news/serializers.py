@@ -19,6 +19,7 @@ class CategoriesSerializers(serializers.ModelSerializer):
 class NewsGetSerializers(serializers.ModelSerializer):
     category = CategoriesSerializers()
     title = serializers.JSONField()
+    body_partial = serializers.SerializerMethodField()
 
     class Meta:
         model = News
@@ -26,12 +27,19 @@ class NewsGetSerializers(serializers.ModelSerializer):
             'id',
             'title',
             'body',
+            'body_partial',
             'slug',
             'image',
             'category',
             'author',
             'created_at',
         ]
+
+    def get_body_partial(self, obj):
+        body = {}
+        for key in obj.body.keys():
+            body[key] = ' '.join(obj.body[key].split(' ')[:15])
+        return body
 
 
 class NewsSerializers(serializers.ModelSerializer):

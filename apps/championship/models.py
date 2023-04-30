@@ -41,10 +41,10 @@ class Championship(models.Model):
 
 
 class Season(models.Model):
-    season_years = models.CharField(max_length=25)
-    start_date = models.DateField()
+    season_years = models.CharField(max_length=25, blank=True)
+    start_date = models.DateField(blank=True)
     is_started = models.BooleanField(default=False)
-    championship = models.ForeignKey('Championship', on_delete=models.PROTECT, related_name='season')
+    championship = models.ForeignKey('Championship', on_delete=models.PROTECT, related_name='season', blank=True)
     match_days = models.CharField(max_length=15, default='6-7')
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -65,5 +65,13 @@ class Season(models.Model):
 
     @property
     def tours_count(self):
-        count = self.match.all().count()
+        count = self.championship.club.all().count()
         return (count - 1) * 2 if count else 0
+
+    @property
+    def matches_count(self):
+        count = self.championship.club.all().count()
+        return count * (count - 1) if count else 0
+
+    class Meta:
+        ordering = ['-id']

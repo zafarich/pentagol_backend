@@ -26,11 +26,11 @@ class Migration(migrations.Migration):
             name='Season',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('season_years', models.CharField(max_length=25)),
+                ('season_years', models.CharField(max_length=25, blank=True)),
                 ('match_days', models.CharField(max_length=15, default='6-7')),
-                ('start_date', models.DateField()),
+                ('start_date', models.DateField(blank=True)),
                 ('is_started', models.BooleanField(default=False)),
-                ('championship', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='season', to='championship.championship')),
+                ('championship', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='season', to='championship.championship', blank=True)),
             ],
         ),
     ]
