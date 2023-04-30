@@ -16,5 +16,5 @@ class News(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        self.slug = slugify(self.title['en'])
         super(News, self).save(*args, **kwargs)

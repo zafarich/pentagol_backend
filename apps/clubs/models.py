@@ -11,8 +11,8 @@ class Club(models.Model):
     coach = models.CharField(max_length=127)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        season_started = self.championship.season.season_started
-        if season_started:
+        actual_season = self.championship.actual_season
+        if actual_season is not None and actual_season.is_started:
             raise ValidationError(detail={"Championship has already started. Can't create a club"})
 
         super().save(force_insert, force_update, using, update_fields)

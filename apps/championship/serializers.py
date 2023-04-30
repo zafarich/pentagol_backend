@@ -1,5 +1,3 @@
-import json
-
 from rest_framework import serializers
 
 from championship.models import Championship, Season
@@ -34,7 +32,6 @@ class ChampionshipPartialSerializers(serializers.ModelSerializer):
 
 
 class SeasonCreateSerializers(serializers.ModelSerializer):
-
     class Meta:
         model = Season
         fields = [
@@ -61,4 +58,5 @@ class SeasonGetSerializers(serializers.ModelSerializer):
             'championship',
             'is_started',
             'match_days',
+            'matches_exists',
         ]

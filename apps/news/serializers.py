@@ -18,6 +18,7 @@ class CategoriesSerializers(serializers.ModelSerializer):
 
 class NewsGetSerializers(serializers.ModelSerializer):
     category = CategoriesSerializers()
+    title = serializers.JSONField()
 
     class Meta:
         model = News
@@ -29,10 +30,12 @@ class NewsGetSerializers(serializers.ModelSerializer):
             'image',
             'category',
             'author',
+            'created_at',
         ]
 
 
 class NewsSerializers(serializers.ModelSerializer):
+    title = serializers.JSONField()
 
     class Meta:
         model = News
@@ -44,9 +47,10 @@ class NewsSerializers(serializers.ModelSerializer):
             'image',
             'category',
             'author',
+            'created_at',
         ]
 
         read_only_fields = [
             'id',
+            'created_at',
         ]
-

@@ -7,7 +7,8 @@ from rest_framework.exceptions import ValidationError
 
 def last_sort_number():
     last_number = Championship.objects.all().aggregate(sort_max=
-        Coalesce(models.Max('sort'), models.Value(0), output_field=models.IntegerField()))['sort_max'] + 1
+                                                       Coalesce(models.Max('sort'), models.Value(0),
+                                                                output_field=models.IntegerField()))['sort_max'] + 1
     return last_number
 
 
@@ -26,8 +27,11 @@ class Championship(models.Model):
 
     @property
     def actual_season(self):
-        season = Season.objects.get(championship_id=self.id, is_started=True)
-        return season
+        try:
+            season = Season.objects.get(championship_id=self.id, is_started=True)
+            return season
+        except Season.DoesNotExist:
+            return None
 
     def all_clubs(self):
         return self.club.all()
@@ -54,3 +58,12 @@ class Season(models.Model):
             if started_seasons_exists:
                 raise ValidationError(detail={'Started season already exists'})
         super().save(force_insert, force_update, using, update_fields)
+
+    @property
+    def matches_exists(self):
+        return self.match.all().exists()
+
+    @property
+    def tours_count(self):
+        count = self.match.all().count()
+        return (count - 1) * 2 if count else 0
