@@ -12,13 +12,13 @@ from news.serializers import NewsSerializers, NewsGetSerializers, CategoriesSeri
 class CategoryNewsModelViewSet(ModelViewSet):
     queryset = CategoryNews.objects.all()
     serializer_class = CategoriesSerializers
-    filter_backends = [SearchFilter, DjangoFilterBackend]
-    filter_fields = ['category']
 
 
 class NewsModelViewSet(ModelViewSetWithNumberPaginationViewSet):
     queryset = News.objects.all()
     serializer_class = NewsSerializers
+    filter_backends = [SearchFilter, DjangoFilterBackend]
+    filterset_fields = ['category', ]
 
     def get_serializer_class(self):
         if self.request.method == 'GET':

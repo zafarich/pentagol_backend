@@ -51,6 +51,12 @@ class ChampionshipModelViewSet(ModelViewSet):
             return Response(status=200, data={'Season has not started'})
 
     @action(['GET'], detail=True)
+    def tours_count(self, request, pk):
+        championship = self.get_object()
+        count = championship.club.all().count()
+        return Response(status=200, data={'count': (count - 1) * 2 if count else 0})
+
+    @action(['GET'], detail=True)
     def table(self, request, pk):  # ORM code yozishga vaqt yetmadi
         championship = self.get_object()
         actual_season = championship.actual_season

@@ -16,7 +16,7 @@ SECRET_KEY = env('SECRET_KEY')
 
 DEBUG = env('DEBUG').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', 'pentagol.uz', 'http://pentagol.uz', 'http://admin.pentagol.uz', 'admin.pentagol.uz']
 CURRENT_HOST = env('CURRENT_PROTOCOL') + '://' + env('CURRENT_HOST') + ':' + env('CURRENT_PORT')
 
 LOCAL_APPS = [
