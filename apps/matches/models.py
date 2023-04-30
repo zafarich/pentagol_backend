@@ -24,7 +24,7 @@ class Match(models.Model):
         if self.is_started and self.away_goals is None and self.home_goals is None:
             return '0 - 0'
 
-        return f'{self.away_goals if self.away_goals is not None else ""} - {self.home_goals if self.home_goals is not None else ""}'
+        return f'{self.home_goals if self.home_goals is not None else ""} - {self.away_goals if self.away_goals is not None else ""}'
 
     @property
     def is_started(self):
@@ -39,7 +39,7 @@ class Match(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
-        ordering = ['tour', 'date']
+        ordering = ['season_id', 'tour', 'date']
 
 
 def get_weeks_of_season(start_date, week_days, tours_count):
